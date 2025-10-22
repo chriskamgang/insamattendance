@@ -23,28 +23,30 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (Schema::hasTable('company_details')) {
-            $companyDetailServices = new CompanyDetailServices();
-            $_companyDetail = $companyDetailServices->getCompanyDetail();
+        try {
+            if (Schema::hasTable('company_details')) {
+                $companyDetailServices = new CompanyDetailServices();
+                $_companyDetail = $companyDetailServices->getCompanyDetail();
 
-            view()->composer('auth.login', function ($view) use ($_companyDetail) {
-                $view->with('_companyDetail', $_companyDetail);
-            });
-            view()->composer('auth.forgetPassword', function ($view) use ($_companyDetail) {
-                $view->with('_companyDetail', $_companyDetail);
-            });
-            view()->composer('auth.otpView', function ($view) use ($_companyDetail) {
-                $view->with('_companyDetail', $_companyDetail);
-            });
-            view()->composer('auth.passwordResetView', function ($view) use ($_companyDetail) {
-                $view->with('_companyDetail', $_companyDetail);
-            });
+                view()->composer('auth.login', function ($view) use ($_companyDetail) {
+                    $view->with('_companyDetail', $_companyDetail);
+                });
+                view()->composer('auth.forgetPassword', function ($view) use ($_companyDetail) {
+                    $view->with('_companyDetail', $_companyDetail);
+                });
+                view()->composer('auth.otpView', function ($view) use ($_companyDetail) {
+                    $view->with('_companyDetail', $_companyDetail);
+                });
+                view()->composer('auth.passwordResetView', function ($view) use ($_companyDetail) {
+                    $view->with('_companyDetail', $_companyDetail);
+                });
 
-            view()->composer('include.header', function ($view) use ($_companyDetail) {
-                $view->with('_companyDetail', $_companyDetail);
-            });
+                view()->composer('include.header', function ($view) use ($_companyDetail) {
+                    $view->with('_companyDetail', $_companyDetail);
+                });
+            }
+        } catch (\Exception $e) {
+            // Ignorer les erreurs de connexion DB au démarrage
         }
-
-
     }
 }
