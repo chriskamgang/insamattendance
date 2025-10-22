@@ -49,7 +49,7 @@
                             @endif
                         </div>
                         <div class="auth-form-wrapper pt-4 pb-0">
-                            <h3><a href="https://cninfotech.com/" class="noble-ui-logo d-block mb-2" target="_blank">IUEs/INSAM</a></h3>
+                            <h3><a href="https://estuairevisa.com/" class="noble-ui-logo d-block mb-2" target="_blank">IUEs/INSAM</a></h3>
                             <h5 class="text-muted fw-normal mb-4">Welcome back! Log in to your account.</h5>
                             @if ($errors->has('login_error'))
                                 <span class="text-danger">
