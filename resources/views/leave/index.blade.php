@@ -10,7 +10,7 @@
     @include('include.addButton',[ 'route' => route('admin.leave.create'), 'button_text' => "Create Leave"])
 @stop
 @section('js')
-    <script src="{{ asset('admin/assets/changeStatus.js') }}"></script>
+    <script src="{{ asset('assets/changeStatus.js') }}"></script>
 @stop
 @section('content')
     <div class="row">

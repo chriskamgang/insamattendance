@@ -88,7 +88,7 @@ class AttendanceServices
                 ]);
                 $_return = [
                     'check_in' => date('H:i:s', strtotime($_attendance->check_in)),
-                    'check_in_image' => ($_attendance->check_in_image && $_attendance->check_in_image != "-") ? asset('/admin/uploads/attendance/' . $_attendance->check_in_image) : "",
+                    'check_in_image' => ($_attendance->check_in_image && $_attendance->check_in_image != "-") ? asset('/uploads/attendance/' . $_attendance->check_in_image) : "",
                     'check_out' => "-",
                     'check_out_image' => "",
                     'lunch_in' => "-",
@@ -118,11 +118,11 @@ class AttendanceServices
                     $_attendanceNew = Attendance::find($_attendance->id);
                     $_return = [
                         'check_in' => date('H:i:s', strtotime($_attendanceNew->check_in)),
-                        'check_in_image' => ($_attendanceNew->check_in_image && $_attendanceNew->check_in_image != "-") ? asset('/admin/uploads/attendance/' . $_attendanceNew->check_in_image) : "",
+                        'check_in_image' => ($_attendanceNew->check_in_image && $_attendanceNew->check_in_image != "-") ? asset('/uploads/attendance/' . $_attendanceNew->check_in_image) : "",
                         'check_out' => "-",
                         'check_out_image' => "",
                         'lunch_in' => date('H:i:s', strtotime($_attendanceNew->lunch_in)),
-                        'lunch_in_image' => ($_attendanceNew->lunch_in_image && $_attendanceNew->lunch_in_image != "-") ? asset('/admin/uploads/attendance/' . $_attendanceNew->lunch_in_image) : "",
+                        'lunch_in_image' => ($_attendanceNew->lunch_in_image && $_attendanceNew->lunch_in_image != "-") ? asset('/uploads/attendance/' . $_attendanceNew->lunch_in_image) : "",
                         'lunch_out' => "-",
                         'lunch_out_image' => "",
                     ];
@@ -141,13 +141,13 @@ class AttendanceServices
                     $_attendanceNew = Attendance::find($_attendance->id);
                     $_return = [
                         'check_in' => date('H:i:s', strtotime($_attendanceNew->check_in)),
-                        'check_in_image' => ($_attendanceNew->check_in_image && $_attendanceNew->check_in_image != "-") ? asset('/admin/uploads/attendance/' . $_attendanceNew->check_in_image) : "",
+                        'check_in_image' => ($_attendanceNew->check_in_image && $_attendanceNew->check_in_image != "-") ? asset('/uploads/attendance/' . $_attendanceNew->check_in_image) : "",
                         'check_out' => "-",
                         'check_out_image' => "",
                         'lunch_in' => date('H:i:s', strtotime($_attendanceNew->lunch_in)),
-                        'lunch_in_image' => ($_attendanceNew->lunch_in_image && $_attendanceNew->lunch_in_image != "-") ? asset('/admin/uploads/attendance/' . $_attendanceNew->lunch_in_image) : "",
+                        'lunch_in_image' => ($_attendanceNew->lunch_in_image && $_attendanceNew->lunch_in_image != "-") ? asset('/uploads/attendance/' . $_attendanceNew->lunch_in_image) : "",
                         'lunch_out' => date('H:i:s', strtotime($_attendanceNew->lunch_out)),
-                        'lunch_out_image' => ($_attendanceNew->lunch_out_image && $_attendanceNew->lunch_out_image != "-") ? asset('/admin/uploads/attendance/' . $_attendanceNew->lunch_out_image) : "",
+                        'lunch_out_image' => ($_attendanceNew->lunch_out_image && $_attendanceNew->lunch_out_image != "-") ? asset('/uploads/attendance/' . $_attendanceNew->lunch_out_image) : "",
                     ];
                     return Helper::successResponseAPI(message: "Success", data: $_return);
 
@@ -196,13 +196,13 @@ class AttendanceServices
                     $_attendanceNew = Attendance::find($_attendance->id);
                     $_return = [
                         'check_in' => date('H:i:s', strtotime($_attendanceNew->check_in)),
-                        'check_in_image' => ($_attendanceNew->check_in_image && $_attendanceNew->check_in_image != "-") ? asset('/admin/uploads/attendance/' . $_attendanceNew->check_in_image) : "",
+                        'check_in_image' => ($_attendanceNew->check_in_image && $_attendanceNew->check_in_image != "-") ? asset('/uploads/attendance/' . $_attendanceNew->check_in_image) : "",
                         'check_out' => date('H:i:s', strtotime($_attendanceNew->check_out)),
-                        'check_out_image' => ($_attendanceNew->check_out_image && $_attendanceNew->check_out_image != "-") ? asset('/admin/uploads/attendance/' . $_attendanceNew->check_out_image) : "",
+                        'check_out_image' => ($_attendanceNew->check_out_image && $_attendanceNew->check_out_image != "-") ? asset('/uploads/attendance/' . $_attendanceNew->check_out_image) : "",
                         'lunch_in' => date('H:i:s', strtotime($_attendanceNew->lunch_in)),
-                        'lunch_in_image' => ($_attendanceNew->lunch_in_image && $_attendanceNew->lunch_in_image != "-") ? asset('/admin/uploads/attendance/' . $_attendanceNew->lunch_in_image) : "",
+                        'lunch_in_image' => ($_attendanceNew->lunch_in_image && $_attendanceNew->lunch_in_image != "-") ? asset('/uploads/attendance/' . $_attendanceNew->lunch_in_image) : "",
                         'lunch_out' => date('H:i:s', strtotime($_attendanceNew->lunch_out)),
-                        'lunch_out_image' => ($_attendanceNew->lunch_out_image && $_attendanceNew->lunch_out_image != "-") ? asset('/admin/uploads/attendance/' . $_attendanceNew->lunch_out_image) : "",
+                        'lunch_out_image' => ($_attendanceNew->lunch_out_image && $_attendanceNew->lunch_out_image != "-") ? asset('/uploads/attendance/' . $_attendanceNew->lunch_out_image) : "",
                     ];
                     return Helper::successResponseAPI(message: "Success", data: $_return);
                 }
@@ -248,7 +248,7 @@ class AttendanceServices
             ]);
             $_return = [
                 'check_in' => date('H:i:s', strtotime($_attendance->check_in)),
-                'check_in_image' => ($_attendance->check_in_image && $_attendance->check_in_image != "-") ? asset('/admin/uploads/attendance/' . $_attendance->check_in_image) : "",
+                'check_in_image' => ($_attendance->check_in_image && $_attendance->check_in_image != "-") ? asset('/uploads/attendance/' . $_attendance->check_in_image) : "",
                 'check_out' => "-",
                 'check_out_image' => "",
                 'lunch_in' => "-",
@@ -271,11 +271,11 @@ class AttendanceServices
                 $_attendanceNew = Attendance::find($_attendance->id);
                 $_return = [
                     'check_in' => date('H:i:s', strtotime($_attendanceNew->check_in)),
-                    'check_in_image' => ($_attendanceNew->check_in_image && $_attendanceNew->check_in_image != "-") ? asset('/admin/uploads/attendance/' . $_attendanceNew->check_in_image) : "",
+                    'check_in_image' => ($_attendanceNew->check_in_image && $_attendanceNew->check_in_image != "-") ? asset('/uploads/attendance/' . $_attendanceNew->check_in_image) : "",
                     'check_out' => "-",
                     'check_out_image' => "",
                     'lunch_in' => date('H:i:s', strtotime($_attendanceNew->lunch_in)),
-                    'lunch_in_image' => ($_attendanceNew->lunch_in_image && $_attendanceNew->check_in_image != "-") ? asset('/admin/uploads/attendance/' . $_attendanceNew->lunch_in_image) : "",
+                    'lunch_in_image' => ($_attendanceNew->lunch_in_image && $_attendanceNew->check_in_image != "-") ? asset('/uploads/attendance/' . $_attendanceNew->lunch_in_image) : "",
                     'lunch_out' => "-",
                     'lunch_out_image' => "",
                 ];
@@ -293,13 +293,13 @@ class AttendanceServices
                 $_attendanceNew = Attendance::find($_attendance->id);
                 $_return = [
                     'check_in' => date('H:i:s', strtotime($_attendanceNew->check_in)),
-                    'check_in_image' => ($_attendanceNew->check_in_image && $_attendanceNew->check_in_image != "-") ? asset('/admin/uploads/attendance/' . $_attendanceNew->check_in_image) : "",
+                    'check_in_image' => ($_attendanceNew->check_in_image && $_attendanceNew->check_in_image != "-") ? asset('/uploads/attendance/' . $_attendanceNew->check_in_image) : "",
                     'check_out' => "-",
                     'check_out_image' => "",
                     'lunch_in' => date('H:i:s', strtotime($_attendanceNew->lunch_in)),
-                    'lunch_in_image' => ($_attendanceNew->lunch_in_image && $_attendanceNew->lunch_in_image != "-") ? asset('/admin/uploads/attendance/' . $_attendanceNew->lunch_in_image) : "",
+                    'lunch_in_image' => ($_attendanceNew->lunch_in_image && $_attendanceNew->lunch_in_image != "-") ? asset('/uploads/attendance/' . $_attendanceNew->lunch_in_image) : "",
                     'lunch_out' => date('H:i:s', strtotime($_attendanceNew->lunch_out)),
-                    'lunch_out_image' => ($_attendanceNew->lunch_out_image && $_attendanceNew->lunch_out_image != "-") ? asset('/admin/uploads/attendance/' . $_attendanceNew->lunch_out_image) : "",
+                    'lunch_out_image' => ($_attendanceNew->lunch_out_image && $_attendanceNew->lunch_out_image != "-") ? asset('/uploads/attendance/' . $_attendanceNew->lunch_out_image) : "",
                 ];
                 return Helper::successResponseAPI(message: "Success", data: $_return);
 
@@ -350,13 +350,13 @@ class AttendanceServices
                 $_attendanceNew = Attendance::find($_attendance->id);
                 $_return = [
                     'check_in' => date('H:i:s', strtotime($_attendanceNew->check_in)),
-                    'check_in_image' => ($_attendanceNew->check_in_image && $_attendanceNew->check_in_image != "-") ? asset('/admin/uploads/attendance/' . $_attendanceNew->check_in_image) : "",
+                    'check_in_image' => ($_attendanceNew->check_in_image && $_attendanceNew->check_in_image != "-") ? asset('/uploads/attendance/' . $_attendanceNew->check_in_image) : "",
                     'check_out' => date('H:i:s', strtotime($_attendanceNew->check_out)),
-                    'check_out_image' => ($_attendanceNew->check_out_image && $_attendanceNew->check_out_image != "-") ? asset('/admin/uploads/attendance/' . $_attendanceNew->check_out_image) : "",
+                    'check_out_image' => ($_attendanceNew->check_out_image && $_attendanceNew->check_out_image != "-") ? asset('/uploads/attendance/' . $_attendanceNew->check_out_image) : "",
                     'lunch_in' => date('H:i:s', strtotime($_attendanceNew->lunch_in)),
-                    'lunch_in_image' => ($_attendanceNew->lunch_in_image && $_attendanceNew->lunch_in_image != "-") ? asset('/admin/uploads/attendance/' . $_attendanceNew->lunch_in_image) : "",
+                    'lunch_in_image' => ($_attendanceNew->lunch_in_image && $_attendanceNew->lunch_in_image != "-") ? asset('/uploads/attendance/' . $_attendanceNew->lunch_in_image) : "",
                     'lunch_out' => date('H:i:s', strtotime($_attendanceNew->lunch_out)),
-                    'lunch_out_image' => ($_attendanceNew->lunch_out_image && $_attendanceNew->lunch_out_image != "-") ? asset('/admin/uploads/attendance/' . $_attendanceNew->lunch_out_image) : "",
+                    'lunch_out_image' => ($_attendanceNew->lunch_out_image && $_attendanceNew->lunch_out_image != "-") ? asset('/uploads/attendance/' . $_attendanceNew->lunch_out_image) : "",
                 ];
                 return Helper::successResponseAPI(message: "Success", data: $_return);
             }

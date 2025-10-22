@@ -10,9 +10,9 @@
     @include('include.addButton',[ 'route' => route('admin.attendance.attendanceList'), 'button_text' => "Back to list"])
 @stop
 @section('js')
-    <script src="{{ asset('admin/assets/js/jquery-validation/jquery.validate.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/jquery-validation/additional-methods.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/validation/attendance.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-validation/additional-methods.min.js') }}"></script>
+    <script src="{{ asset('assets/validation/attendance.js') }}"></script>
 @stop
 @section('content')
     <div class="row">

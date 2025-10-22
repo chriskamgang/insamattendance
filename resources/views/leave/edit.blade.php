@@ -10,9 +10,9 @@
     @include('include.addButton',[ 'route' => route('admin.leaveType.index'), 'button_text' => "Back Leave Type list"])
 @stop
 @section('js')
-    <script src="{{ asset('admin/assets/js/jquery-validation/jquery.validate.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/jquery-validation/additional-methods.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/validation/leaveType.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-validation/additional-methods.min.js') }}"></script>
+    <script src="{{ asset('assets/validation/leaveType.js') }}"></script>
 @stop
 @section('content')
     <div class="row">

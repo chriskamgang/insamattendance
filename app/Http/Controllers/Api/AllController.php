@@ -87,7 +87,7 @@ class AllController extends Controller
             $data['check_password'] = $_settingRepository->getSettingByKey('check_password')->value;
 
             $banner_image = $_settingRepository->getSettingByKey('banner_image');
-            $data['banner_image'] = ($banner_image) ? asset('admin/uploads/setting/' . $banner_image->value) : "";
+            $data['banner_image'] = ($banner_image) ? asset('uploads/setting/' . $banner_image->value) : "";
             $data['banner_url'] = $_settingRepository->getSettingByKey('banner_url')->value ?? "";
             $return_notice = "";
             $return_birthday_message = "";

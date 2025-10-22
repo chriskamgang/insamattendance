@@ -7,7 +7,7 @@
     @include('include.addButton',[ 'route' => route('admin.notice.create'), 'button_text' => "Create Notice"])
 @stop
 @section('js')
-    <script src="{{ asset('admin/assets/changeStatus.js') }}"></script>
+    <script src="{{ asset('assets/changeStatus.js') }}"></script>
 @stop
 @section('content')
     <div class="row">

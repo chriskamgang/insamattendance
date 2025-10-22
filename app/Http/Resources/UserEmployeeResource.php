@@ -21,7 +21,7 @@ class UserEmployeeResource extends JsonResource
             'email' => $this->email,
             'mobile' => $this->mobile,
             'address' => $this->address,
-            'image' => ($this->image)? asset('/admin/uploads/user/'.$this->image) : "",
+            'image' => ($this->image)? asset('/uploads/user/'.$this->image) : "",
             'shift_id' => $this->shift_id,
             'department_id' => $this->department_id,
             'shift_type' => $this->getShift->type,

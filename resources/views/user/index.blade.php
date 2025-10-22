@@ -11,7 +11,7 @@
     @include('include.addButton',[ 'route' => route('admin.user.create'), 'button_text' => "Create Employee"])
 @stop
 @section('js')
-    <script src="{{ asset('admin/assets/changeStatus.js') }}"></script>
+    <script src="{{ asset('assets/changeStatus.js') }}"></script>
 @stop
 @section('content')
     @if( checkUserRole())

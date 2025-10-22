@@ -30,7 +30,7 @@ class CompanyDetails extends Model
     public function getImagePathAttribute(): string
     {
         if( $this->image){
-            $path = asset('/admin/uploads/company');
+            $path = asset('/uploads/company');
             return $path . '/' . $this->image;
         }
         return "";

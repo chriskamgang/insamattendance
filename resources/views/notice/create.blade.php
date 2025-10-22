@@ -11,9 +11,9 @@
 @stop
 
 @section('js')
-    <script src="{{ asset('admin/assets/js/jquery-validation/jquery.validate.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/jquery-validation/additional-methods.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/validation/notice.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-validation/additional-methods.min.js') }}"></script>
+    <script src="{{ asset('assets/validation/notice.js') }}"></script>
 @stop
 @section('content')
     <div class="row">

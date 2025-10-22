@@ -10,10 +10,10 @@
     @include('include.addButton',[ 'route' => route('admin.shift.index'), 'button_text' => "Back to list"])
 @stop
 @section('js')
-    <script src="{{ asset('admin/assets/js/jquery-validation/jquery.validate.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/jquery-validation/additional-methods.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/validation/shift.js') }}"></script>
-    <script src="{{ asset('admin/assets/numerical_checker.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-validation/additional-methods.min.js') }}"></script>
+    <script src="{{ asset('assets/validation/shift.js') }}"></script>
+    <script src="{{ asset('assets/numerical_checker.js') }}"></script>
     <script>
         $(document).ready(function () {
             $("#is_early_check_in").change(function () {

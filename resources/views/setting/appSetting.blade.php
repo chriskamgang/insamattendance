@@ -7,10 +7,10 @@
     App Setting
 @stop
 @section('css')
-    <link href="{{asset('admin/assets/vendors/select2/select2.min.css')}}" rel="stylesheet" />
+    <link href="{{asset('assets/vendors/select2/select2.min.css')}}" rel="stylesheet" />
 @stop
 @section('js')
-    <script src="{{asset('admin/assets/vendors/select2/select2.min.js')}}"></script>
+    <script src="{{asset('assets/vendors/select2/select2.min.js')}}"></script>
     <script>
         $(function() {
             'use strict'
@@ -116,9 +116,9 @@
                                     <label for="banner_image" class="form-label">Dashboard Banner</label>
                                     <input type="file" id="banner_image" class="form-control" name="banner_image">
                                     @if($_setting['banner_image'] ?? false)
-                                        <a href="{{ asset('admin/uploads/setting/'. $_setting['banner_image'])  }}"
+                                        <a href="{{ asset('uploads/setting/'. $_setting['banner_image'])  }}"
                                            target="_blank">
-                                            <img src="{{ asset('admin/uploads/setting/'. $_setting['banner_image'])  }}"
+                                            <img src="{{ asset('uploads/setting/'. $_setting['banner_image'])  }}"
                                                  alt="{{ $_setting['banner_image'] }}" height="100px" width="100px">
                                         </a>
                                     @endif
@@ -232,9 +232,9 @@
                                     <label for="banner_image" class="form-label">Dashboard Banner</label>
                                     <input type="file" id="banner_image" class="form-control" name="banner_image">
                                     @if($_setting['banner_image'] ?? false)
-                                        <a href="{{ asset('admin/uploads/setting/'. $_setting['banner_image'])  }}"
+                                        <a href="{{ asset('uploads/setting/'. $_setting['banner_image'])  }}"
                                            target="_blank">
-                                            <img src="{{ asset('admin/uploads/setting/'. $_setting['banner_image'])  }}"
+                                            <img src="{{ asset('uploads/setting/'. $_setting['banner_image'])  }}"
                                                  alt="{{ $_setting['banner_image'] }}" height="100px" width="100px">
                                         </a>
                                     @endif

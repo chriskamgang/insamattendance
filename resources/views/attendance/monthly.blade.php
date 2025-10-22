@@ -10,7 +10,7 @@
     @include('include.addButton',[ 'route' => route('admin.attendance.attendanceList'), 'button_text' => "Back to Attendance list"])
 @stop
 @section('js')
-    <script src="{{ asset('admin/assets/changeStatus.js') }}"></script>
+    <script src="{{ asset('assets/changeStatus.js') }}"></script>
     <script>
         $(document).ready(function(){
             function getAttendanceFilterParam()
@@ -174,7 +174,7 @@
                                             @if($value['check_in'])
                                                 <button class="btn btn-outline-success btn-xs imageModel" data-bs-toggle="modal"
                                                         data-bs-target="#imageModel"
-                                                        link='{{asset('admin/uploads/attendance/'.$value['check_in_image'])}}'>
+                                                        link='{{asset('uploads/attendance/'.$value['check_in_image'])}}'>
                                                     {{ date('h:i:s A', strtotime($value['check_in']))}}
                                                 </button>
                                             @else
@@ -186,7 +186,7 @@
                                                 @if($value['lunch_in'])
                                                     <button class="btn btn-outline-success btn-xs imageModel" data-bs-toggle="modal"
                                                             data-bs-target="#imageModel"
-                                                            link='{{asset('admin/uploads/attendance/'.$value['lunch_in_image'])}}' >
+                                                            link='{{asset('uploads/attendance/'.$value['lunch_in_image'])}}' >
                                                         {{ date('h:i:s A', strtotime($value['lunch_in']))}}
                                                     </button>
                                                 @else
@@ -197,7 +197,7 @@
                                                 @if($value['lunch_out'])
                                                     <button class="btn btn-outline-success btn-xs imageModel" data-bs-toggle="modal"
                                                             data-bs-target="#imageModel"
-                                                            link='{{asset('admin/uploads/attendance/'.$value['lunch_out_image'])}}' >
+                                                            link='{{asset('uploads/attendance/'.$value['lunch_out_image'])}}' >
                                                         {{ date('h:i:s A', strtotime($value['lunch_out']))}}
                                                     </button>
                                                 @else
@@ -209,7 +209,7 @@
                                             @if($value['check_out'])
                                                 <button class="btn btn-outline-success btn-xs imageModel" data-bs-toggle="modal"
                                                         data-bs-target="#imageModel"
-                                                        link='{{asset('admin/uploads/attendance/'.$value['check_out_image'])}}' >
+                                                        link='{{asset('uploads/attendance/'.$value['check_out_image'])}}' >
                                                     {{ date('h:i:s A', strtotime($value['check_out']))}}
                                                 </button>
                                             @else
@@ -322,7 +322,7 @@
                                         @if($value['check_in'])
                                             <button class="btn btn-outline-success btn-xs imageModel" data-bs-toggle="modal"
                                                     data-bs-target="#imageModel"
-                                                    link='{{asset('admin/uploads/attendance/'.$value['check_in_image'])}}'>
+                                                    link='{{asset('uploads/attendance/'.$value['check_in_image'])}}'>
                                                 {{ date('h:i:s A', strtotime($value['check_in']))}}
                                             </button>
                                         @else
@@ -334,7 +334,7 @@
                                             @if($value['lunch_in'])
                                                 <button class="btn btn-outline-success btn-xs imageModel" data-bs-toggle="modal"
                                                         data-bs-target="#imageModel"
-                                                        link='{{asset('admin/uploads/attendance/'.$value['lunch_in_image'])}}' >
+                                                        link='{{asset('uploads/attendance/'.$value['lunch_in_image'])}}' >
                                                     {{ date('h:i:s A', strtotime($value['lunch_in']))}}
                                                 </button>
                                             @else
@@ -345,7 +345,7 @@
                                             @if($value['lunch_out'])
                                                 <button class="btn btn-outline-success btn-xs imageModel" data-bs-toggle="modal"
                                                         data-bs-target="#imageModel"
-                                                        link='{{asset('admin/uploads/attendance/'.$value['lunch_out_image'])}}' >
+                                                        link='{{asset('uploads/attendance/'.$value['lunch_out_image'])}}' >
                                                     {{ date('h:i:s A', strtotime($value['lunch_out']))}}
                                                 </button>
                                             @else
@@ -357,7 +357,7 @@
                                         @if($value['check_out'])
                                             <button class="btn btn-outline-success btn-xs imageModel" data-bs-toggle="modal"
                                                     data-bs-target="#imageModel"
-                                                    link='{{asset('admin/uploads/attendance/'.$value['check_out_image'])}}' >
+                                                    link='{{asset('uploads/attendance/'.$value['check_out_image'])}}' >
                                                 {{ date('h:i:s A', strtotime($value['check_out']))}}
                                             </button>
                                         @else

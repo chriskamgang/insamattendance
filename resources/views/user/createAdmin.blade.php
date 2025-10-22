@@ -10,9 +10,9 @@
     @include('include.addButton',[ 'route' => route('admin.admin.listAdmin'), 'button_text' => "Back User list"])
 @stop
 @section('js')
-    <script src="{{ asset('admin/assets/js/jquery-validation/jquery.validate.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/js/jquery-validation/additional-methods.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/validation/user.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-validation/additional-methods.min.js') }}"></script>
+    <script src="{{ asset('assets/validation/user.js') }}"></script>
 @stop
 @section('content')
     @if( checkUserRole())

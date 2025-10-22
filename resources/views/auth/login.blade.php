@@ -19,19 +19,19 @@
     <!-- End fonts -->
 
     <!-- core:css -->
-    <link rel="stylesheet" href="{{ asset('admin/assets/vendors/core/core.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/vendors/core/core.css')}}">
     <!-- endinject -->
 
     <!-- inject:css -->
-    <link rel="stylesheet" href="{{ asset('admin/assets/fonts/feather-font/css/iconfont.css')}}">
-    <link rel="stylesheet" href="{{ asset('admin/assets/vendors/flag-icon-css/css/flag-icon.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/fonts/feather-font/css/iconfont.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/vendors/flag-icon-css/css/flag-icon.min.css')}}">
     <!-- endinject -->
 
     <!-- Layout styles -->
-    <link rel="stylesheet" href="{{ asset('admin/assets/css/style.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css')}}">
     <!-- End layout styles -->
 
-    <link rel="shortcut icon" href="{{ asset('admin/assets/images/favicon.png')}}"/>
+    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png')}}"/>
 </head>
 <body>
 <div class="main-wrapper">
@@ -45,7 +45,7 @@
                             @if($_companyDetail && $_companyDetail->image)
                                 <img class="w-25 rounded" src="{{asset($_companyDetail->image_path)}}">
                             @else
-                                <img class="w-25 rounded" src="{{asset('admin/assets/logo.png')}}">
+                                <img class="w-25 rounded" src="{{asset('assets/logo.png')}}">
                             @endif
                         </div>
                         <div class="auth-form-wrapper pt-4 pb-0">
@@ -107,12 +107,12 @@
 </div>
 
 <!-- core:js -->
-<script src="{{ asset('admin/assets/vendors/core/core.js')}}"></script>
+<script src="{{ asset('assets/vendors/core/core.js')}}"></script>
 <!-- endinject -->
 
 <!-- inject:js -->
-<script src="{{ asset('admin/assets/vendors/feather-icons/feather.min.js')}}"></script>
-<script src="{{ asset('admin/assets/js/template.js')}}"></script>
+<script src="{{ asset('assets/vendors/feather-icons/feather.min.js')}}"></script>
+<script src="{{ asset('assets/js/template.js')}}"></script>
 <!-- endinject -->
 
 </body>

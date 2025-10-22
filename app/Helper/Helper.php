@@ -19,7 +19,7 @@ class Helper
     public static function unlinkUploadedFile($fileName, $file_folder_name): bool|string
     {
         if ($fileName) {
-            $image = public_path() . '/admin/uploads/' . $file_folder_name . '/' . $fileName;
+            $image = public_path() . '/uploads/' . $file_folder_name . '/' . $fileName;
             if (file_exists($image)) {
                 unlink($image);
                 return true;
@@ -39,7 +39,7 @@ class Helper
     public static function uploadFile($file, $file_folder_name): string
     {
         $imageName = $file->getClientOriginalName();
-        $path = public_path() . '/admin/uploads/' . $file_folder_name;
+        $path = public_path() . '/uploads/' . $file_folder_name;
         $fileName = date('Y-m-d-h-i-s') . '-' . str_replace('[ ]', '-', $imageName);
         $file->move($path, $fileName);
         return $fileName;

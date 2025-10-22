@@ -210,7 +210,7 @@ class UserServices
             'email' => $_user->email,
             'mobile' => $_user->mobile,
             'address' => $_user->address,
-            'image' => ($_user->image)? asset('/admin/uploads/user/'.$_user->image) : "",
+            'image' => ($_user->image)? asset('/uploads/user/'.$_user->image) : "",
         ];
         return Helper::successResponseAPI(message: "Success", data: $return_response);
     }
@@ -289,7 +289,7 @@ class UserServices
             'address' => $_user->address,
             'shift_id' => $_user->shift_id,
             'department_id' => $_user->department_id,
-            'image' => ($_user->image)? asset('/admin/uploads/user/'.$_user->image) : "",
+            'image' => ($_user->image)? asset('/uploads/user/'.$_user->image) : "",
         ];
     }
 
@@ -348,7 +348,7 @@ class UserServices
                 'email' => $_user->email,
                 'mobile' => $_user->mobile,
                 'address' => $_user->address,
-                'image' => ($_user->image)? asset('/admin/uploads/user/'.$_user->image) : "",
+                'image' => ($_user->image)? asset('/uploads/user/'.$_user->image) : "",
             ];
             return Helper::successResponseAPI(message: "Success", data: $return_response);
         }

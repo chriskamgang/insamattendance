@@ -18,22 +18,22 @@
     <!-- End fonts -->
 
     <!-- core:css -->
-    <link rel="stylesheet" href="{{ asset('admin/assets/vendors/core/core.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendors/core/core.css') }}">
     <!-- endinject -->
 
     <!-- Plugin css for this page -->
-    <link rel="stylesheet" href="{{ asset('admin/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css') }}">
     <!-- End plugin css for this page -->
 
     <!-- inject:css -->
-    <link rel="stylesheet" href="{{ asset('admin/assets/fonts/feather-font/css/iconfont.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/assets/vendors/flag-icon-css/css/flag-icon.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/fonts/feather-font/css/iconfont.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendors/flag-icon-css/css/flag-icon.min.css') }}">
     <!-- endinject -->
 
     <!-- Layout styles -->
-    <link rel="stylesheet" href="{{ asset('admin/assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <!-- End layout styles -->
-    <link rel="shortcut icon" href="{{ asset('admin/assets/images/favicon.png') }}" />
+    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
     @yield('css')
 </head>
 <body>
@@ -74,17 +74,17 @@
 </div>
 
 <!-- core:js -->
-<script src="{{ asset('admin/assets/vendors/core/core.js') }}"></script>
+<script src="{{ asset('assets/vendors/core/core.js') }}"></script>
 <!-- endinject -->
 
 <!-- inject:js -->
-<script src="{{ asset('admin/assets/vendors/feather-icons/feather.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/template.js') }}"></script>
+<script src="{{ asset('assets/vendors/feather-icons/feather.min.js') }}"></script>
+<script src="{{ asset('assets/js/template.js') }}"></script>
 <!-- endinject -->
 
 <!-- End custom js for this page -->
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="{{ asset('admin/assets/delete_model.js') }}"></script>
+<script src="{{ asset('assets/delete_model.js') }}"></script>
 
 @yield('js')
 <?php Session::forget('sweet_alert'); ?>
