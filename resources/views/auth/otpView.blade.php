@@ -5,12 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="description" content="DigitalHR- Face Recognition Attendance System For Performing Daily Attendance">
-    <meta name="author" content="DigitalHR- Face Recognition Attendance System For Performing Daily Attendance">
+    <meta name="description" content="IUEs/INSAM- Face Recognition Attendance System For Performing Daily Attendance">
+    <meta name="author" content="IUEs/INSAM- Face Recognition Attendance System For Performing Daily Attendance">
     <meta name="keywords"
           content="attendance, HR, facial recognition, daily attendance, check in, check out, admin panel, flutter app">
 
-    <title>Digital HR -Otp</title>
+    <title>IUEs/INSAM -Otp</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,7 +49,7 @@
                             @endif
                         </div>
                         <div class="auth-form-wrapper p-5 pt-4 pb-0">
-                            <h3><a href="https://cninfotech.com/" class="noble-ui-logo d-block mb-2" target="_blank">Digital <span> HR</span></a></h3>
+                            <h3><a href="https://cninfotech.com/" class="noble-ui-logo d-block mb-2" target="_blank">IUEs/INSAM</a></h3>
                             <h5 class="text-muted fw-normal mb-4">Otp Code</h5>
                             @if ($errors->has('login_error'))
                                 <span class="text-danger">

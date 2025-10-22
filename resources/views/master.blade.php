@@ -6,10 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="description" content="DigitalHR- Face Recognition Attendance System For Performing Daily Attendance">
-    <meta name="author" content="DigitalHR- Face Recognition Attendance System For Performing Daily Attendance">
+    <meta name="description" content="IUEs/INSAM- Face Recognition Attendance System For Performing Daily Attendance">
+    <meta name="author" content="IUEs/INSAM- Face Recognition Attendance System For Performing Daily Attendance">
     <meta name="keywords" content="attendance, HR, facial recognition, daily attendance, check in, check out, admin panel, flutter app">
-    <title>Digital HR - @yield('title')</title>
+    <title>IUEs/INSAM - @yield('title')</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
