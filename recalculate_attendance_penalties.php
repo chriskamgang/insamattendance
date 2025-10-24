@@ -53,8 +53,17 @@ foreach ($attendances as $attendance) {
         // Parse check-in time
         $checkInTime = Carbon::parse($attendance->check_in);
 
-        // Parse shift start time
-        $shiftStartTime = Carbon::createFromFormat('H:i', $shift->start);
+        // Parse shift start time - handle both H:i and H:i:s formats
+        try {
+            $shiftStartTime = Carbon::createFromFormat('H:i:s', $shift->start);
+        } catch (\Exception $e) {
+            try {
+                $shiftStartTime = Carbon::createFromFormat('H:i', $shift->start);
+            } catch (\Exception $e2) {
+                // If both fail, try parse
+                $shiftStartTime = Carbon::parse($shift->start);
+            }
+        }
         $shiftStartTime->setDate(
             $checkInTime->year,
             $checkInTime->month,
