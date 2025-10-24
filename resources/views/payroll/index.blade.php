@@ -78,7 +78,8 @@
                                 <th class="text-center">Jours Travaillés</th>
                                 <th class="text-center">Jours Non Travaillés</th>
                                 <th class="text-center">Total Retards (min)</th>
-                                <th class="text-end">Pénalités (FCFA)</th>
+                                <th class="text-end">Pénalités Retard (FCFA)</th>
+                                <th class="text-end">Déduction Absences (FCFA)</th>
                                 <th class="text-end">Salaire Final (FCFA)</th>
                                 <th class="text-center">Action</th>
                             </tr>
@@ -88,12 +89,14 @@
                                 @php
                                     $totalSalaries = 0;
                                     $totalPenalties = 0;
+                                    $totalAbsenceDeductions = 0;
                                     $totalFinal = 0;
                                 @endphp
                                 @foreach($_payrollData as $index => $payroll)
                                     @php
                                         $totalSalaries += $payroll['monthly_salary'];
                                         $totalPenalties += $payroll['total_penalties'];
+                                        $totalAbsenceDeductions += $payroll['absence_deduction'];
                                         $totalFinal += $payroll['final_salary'];
                                     @endphp
                                     <tr>
@@ -118,6 +121,11 @@
                                         <td class="text-end">
                                             <span class="text-danger">
                                                 {{ number_format($payroll['total_penalties'], 0, ',', ' ') }} FCFA
+                                            </span>
+                                        </td>
+                                        <td class="text-end">
+                                            <span class="text-danger">
+                                                {{ number_format($payroll['absence_deduction'], 0, ',', ' ') }} FCFA
                                             </span>
                                         </td>
                                         <td class="text-end">
@@ -147,17 +155,21 @@
                                 <tr class="table-active">
                                     <td colspan="3" class="text-end"><strong>TOTAUX:</strong></td>
                                     <td><strong>{{ number_format($totalSalaries, 0, ',', ' ') }} FCFA</strong></td>
-                                    <td colspan="4"></td>
+                                    <td colspan="3"></td>
                                     <td class="text-end">
                                         <strong class="text-danger">{{ number_format($totalPenalties, 0, ',', ' ') }} FCFA</strong>
                                     </td>
                                     <td class="text-end">
+                                        <strong class="text-danger">{{ number_format($totalAbsenceDeductions, 0, ',', ' ') }} FCFA</strong>
+                                    </td>
+                                    <td class="text-end">
                                         <strong class="text-success">{{ number_format($totalFinal, 0, ',', ' ') }} FCFA</strong>
                                     </td>
+                                    <td></td>
                                 </tr>
                             @else
                                 <tr>
-                                    <td class="text-center" colspan="9">Aucune donnée trouvée pour cette période.</td>
+                                    <td class="text-center" colspan="11">Aucune donnée trouvée pour cette période.</td>
                                 </tr>
                             @endif
                             </tbody>
