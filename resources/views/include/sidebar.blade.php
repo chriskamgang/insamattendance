@@ -64,6 +64,12 @@
                         <span class="link-title">Attendance List</span>
                     </a>
                 </li>
+                <li class="nav-item @if($Route[1] === 'payroll') active @endif">
+                    <a href="{{route('admin.payroll.index')}}" class="nav-link">
+                        <i class="link-icon" data-feather="dollar-sign"></i>
+                        <span class="link-title">Rapport Payroll</span>
+                    </a>
+                </li>
                 <li class="nav-item @if($Route[1] === 'leaveType') active @endif">
                     <a href="{{route('admin.leaveType.index')}}" class="nav-link">
                         <i class="link-icon" data-feather="activity"></i>

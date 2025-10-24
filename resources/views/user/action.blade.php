@@ -53,6 +53,12 @@
                 </select>
                 <span class="text-danger">{{ $errors->first('department_id') }}</span>
             </div>
+            <div class="col-lg-6 mb-3">
+                <label for="monthly_salary" class="form-label"> Salaire Mensuel (FCFA)</label>
+                <input type="number" step="0.01" id="monthly_salary" class="form-control" name="monthly_salary"
+                       value="{{ (($_user ?? '')? $_user->monthly_salary :  old('monthly_salary')) }}" placeholder="Entrer le salaire mensuel" min="0">
+                <span class="text-danger">{{ $errors->first('monthly_salary') }}</span>
+            </div>
         @endif
     @else
         <div class="col-lg-6 mb-3">
@@ -74,6 +80,12 @@
                 @endforeach
             </select>
             <span class="text-danger">{{ $errors->first('department_id') }}</span>
+        </div>
+        <div class="col-lg-6 mb-3">
+            <label for="monthly_salary" class="form-label"> Salaire Mensuel (FCFA)</label>
+            <input type="number" step="0.01" id="monthly_salary" class="form-control" name="monthly_salary"
+                   value="{{ (($_user ?? '')? $_user->monthly_salary :  old('monthly_salary')) }}" placeholder="Entrer le salaire mensuel" min="0">
+            <span class="text-danger">{{ $errors->first('monthly_salary') }}</span>
         </div>
     @endif
     @if( checkUserRole())

@@ -33,6 +33,7 @@ class ShiftServices
     {
         $is_early_check_in = $request->is_early_check_in ?? false;
         $is_early_check_out = $request->is_early_check_out ?? false;
+        $includes_saturday = $request->includes_saturday ?? false;
         return $this->shiftRepository->save([
             'title' => $request->title,
             'start' => $request->start,
@@ -44,6 +45,8 @@ class ShiftServices
             'after_start' => $request->after_start,
             'before_end' => (($is_early_check_out)? 0 : ($request->before_end ?? 0)),
             'after_end' => $request->after_end,
+            'includes_saturday' => $includes_saturday,
+            'saturday_end_time' => ($includes_saturday ? $request->saturday_end_time : null),
             'is_active' => true,
         ]);
     }
@@ -69,6 +72,7 @@ class ShiftServices
         if ($_shift) {
             $is_early_check_in = $request->is_early_check_in ?? false;
             $is_early_check_out = $request->is_early_check_out ?? false;
+            $includes_saturday = $request->includes_saturday ?? false;
             return $this->shiftRepository->update($_shift, [
                 'title' => $request->title,
                 'start' => $request->start,
@@ -80,6 +84,8 @@ class ShiftServices
                 'after_start' => $request->after_start,
                 'before_end' => (($is_early_check_out)? 0 : $request->before_end),
                 'after_end' => $request->after_end,
+                'includes_saturday' => $includes_saturday,
+                'saturday_end_time' => ($includes_saturday ? $request->saturday_end_time : null),
                 'is_active' => true,
             ]);
         }

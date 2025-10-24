@@ -27,6 +27,11 @@
                 if ($input.prop('checked')) $("#before_end_div").hide();
                 else $("#before_end_div").show();
             });
+            $("#includes_saturday").change(function () {
+                var $input = $('#includes_saturday');
+                if ($input.prop('checked')) $("#saturday_end_div").show();
+                else $("#saturday_end_div").hide();
+            });
         });
     </script>
 @stop
@@ -38,7 +43,7 @@
                     <h4 class="mb-4">Shift Setup</h4>
                     <form id="shift_submit" class="forms-sample" action="{{route('admin.shift.store')}}" method="post">
                         @csrf
-                            @include('shift.action',['btn'=>"Save Shift"])
+                            @include('shift.action',['btn'=>"Save Shift", '_shift' => null])
                     </form>
                 </div>
             </div>

@@ -24,6 +24,29 @@ class AttendanceServices
         $this->userRepository = new UserRepository();
     }
 
+    /**
+     * Get shift end time based on day of week
+     * If today is Saturday and shift includes Saturday, use saturday_end_time
+     * Otherwise use regular end time
+     *
+     * @param $shift
+     * @param string|null $date Optional date to check (default: today)
+     * @return string End time (H:i or H:i:s format)
+     */
+    private function getShiftEndTime($shift, $date = null)
+    {
+        $checkDate = $date ? Carbon::parse($date) : Carbon::now();
+        $isSaturday = $checkDate->dayOfWeek === Carbon::SATURDAY; // 6 = Saturday
+
+        // If shift includes Saturday and today is Saturday, use saturday_end_time
+        if ($shift->includes_saturday && $isSaturday && $shift->saturday_end_time) {
+            return substr($shift->saturday_end_time, 0, 5); // Return H:i format
+        }
+
+        // Otherwise use regular end time
+        return $shift->end;
+    }
+
     public function employeeAttendance($request)
     {
         $user_id = $request->user_id;
@@ -67,17 +90,8 @@ class AttendanceServices
                 if ($_attendance) {
                     return Helper::errorResponseAPI(message: "Sorry ! employee cannot check in twice a day");
                 }
-                if (!$is_early_check_in) {
-                    $temp_shift_before_start = $shift_start->subMinutes($before_start)->format('H:i:s');
-                    if (strtotime($current_time) < strtotime($temp_shift_before_start)) {
-                        return Helper::errorResponseAPI(message: "Cannot Check In at moment. Please Check In after " . date('H:i',strtotime($temp_shift_before_start)));
-                    }
-                }
-                $shift_start = Carbon::createFromFormat('H:i', ($_shift->start));
-                $temp_shift_after_start = $shift_start->addMinutes($after_start);
-                if (strtotime($current_time) > strtotime($temp_shift_after_start)) {
-                    return Helper::errorResponseAPI(message: "Cannot Check In at moment. Check In Must Be done  " . date('H:i',strtotime($temp_shift_after_start)) . " Please Contact Admin");
-                }
+                // Blocking logic removed - allow check-in at any time
+                // Penalty calculation will be done after attendance save
                 $_attendance = $this->attendanceRepository->save([
                     'user_id' => $_user->id,
                     'date' => $date,
@@ -86,6 +100,39 @@ class AttendanceServices
                     'attendance_type' => Attendance::User,
                     'shift_id' => $_shift->id,
                 ]);
+
+                // Calculate delay and penalty after check-in (night shift)
+                $checkInTime = Carbon::parse($dateTime);
+                $shiftStartTime = Carbon::createFromFormat('H:i', $_shift->start);
+
+                // Set shift date to same day as check-in
+                $shiftStartTime->setDate(
+                    $checkInTime->year,
+                    $checkInTime->month,
+                    $checkInTime->day
+                );
+
+                // Add grace period (after_start in minutes)
+                $graceMinutes = $_shift->after_start ?? 0;
+                $shiftStartTimeWithGrace = $shiftStartTime->copy()->addMinutes($graceMinutes);
+
+                $shiftWorkingHours = $_shift->working_hours ?? 8;
+
+                $penaltyData = $this->calculateDelayAndPenalty(
+                    $checkInTime,
+                    $shiftStartTimeWithGrace,
+                    $_user->monthly_salary,
+                    $shiftWorkingHours
+                );
+
+                // Update attendance with penalty data
+                $_attendance->update([
+                    'delay_minutes' => $penaltyData['delay_minutes'],
+                    'delay_penalty' => $penaltyData['penalty'],
+                    'attendance_status' => $penaltyData['status'],
+                    'daily_salary' => $penaltyData['daily_salary'],
+                ]);
+
                 $_return = [
                     'check_in' => date('H:i:s', strtotime($_attendance->check_in)),
                     'check_in_image' => ($_attendance->check_in_image && $_attendance->check_in_image != "-") ? asset('/uploads/attendance/' . $_attendance->check_in_image) : "",
@@ -159,18 +206,7 @@ class AttendanceServices
                     if ($check_out) {
                         return Helper::errorResponseAPI(message: "Already Check Out for Today");
                     }
-                    if (!$is_early_check_out) {
-                        $temp_shift_before_end = $shift_end->subMinutes($before_end)->format('H:i:s');
-                        if (strtotime($current_time) < strtotime($temp_shift_before_end)) {
-                            return Helper::errorResponseAPI(message: "Cannot Check In at moment. Please Check In after " . date('H:i',strtotime($temp_shift_before_end)));
-                        }
-                    }
-                    $shift_end = Carbon::createFromFormat('H:i', ($_shift->end));
-                    $temp_shift_after_end = $shift_end->addMinutes($after_end);
-                    if (strtotime($current_time) > strtotime($temp_shift_after_end)) {
-                        return Helper::errorResponseAPI(message: "Cannot Check In at moment. Check In Must Be done  " . date('H:i',strtotime($temp_shift_after_end)) . " Please Contact Admin");
-                    }
-
+                    // Blocking logic removed - allow check-out at any time
 
                     $startShiftTime = now()->subDay()->format('Y-m-d') . " " . $_shift->start . ":00";
                     $endShiftTime = $date . " " . $_shift->end . ":00";
@@ -225,18 +261,8 @@ class AttendanceServices
             if ($_attendance) {
                 return Helper::errorResponseAPI(message: "Sorry ! employee cannot check in twice a day");
             }
-            $shift_start = Carbon::createFromFormat('H:i', ($_shift->start));
-            if (!$is_early_check_in) {
-                $temp_shift_before_start = $shift_start->subMinutes($before_start)->format('H:i:s');
-                if (strtotime($current_time) < strtotime($temp_shift_before_start)) {
-                    return Helper::errorResponseAPI(message: "Cannot Check In at moment. Please Check In after " . date('H:i',strtotime($temp_shift_before_start)));
-                }
-            }
-            $shift_start = Carbon::createFromFormat('H:i', ($_shift->start));
-            $temp_shift_after_start = $shift_start->addMinutes($after_start);
-            if (strtotime($current_time) > strtotime($temp_shift_after_start)) {
-                return Helper::errorResponseAPI(message: "Cannot Check In at moment. Check In Must Be done  " . date('H:i',strtotime($temp_shift_after_start)) . " Please Contact Admin");
-            }
+            // Blocking logic removed - allow check-in at any time
+            // Penalty calculation will be done after attendance save
 
             $_attendance = $this->attendanceRepository->save([
                 'user_id' => $_user->id,
@@ -246,6 +272,39 @@ class AttendanceServices
                 'attendance_type' => Attendance::User,
                 'shift_id' => $_shift->id,
             ]);
+
+            // Calculate delay and penalty after check-in
+            $checkInTime = Carbon::parse($dateTime);
+            $shiftStartTime = Carbon::createFromFormat('H:i', $_shift->start);
+
+            // Set shift date to same day as check-in
+            $shiftStartTime->setDate(
+                $checkInTime->year,
+                $checkInTime->month,
+                $checkInTime->day
+            );
+
+            // Add grace period (after_start in minutes)
+            $graceMinutes = $_shift->after_start ?? 0;
+            $shiftStartTimeWithGrace = $shiftStartTime->copy()->addMinutes($graceMinutes);
+
+            $shiftWorkingHours = $_shift->working_hours ?? 8;
+
+            $penaltyData = $this->calculateDelayAndPenalty(
+                $checkInTime,
+                $shiftStartTimeWithGrace,
+                $_user->monthly_salary,
+                $shiftWorkingHours
+            );
+
+            // Update attendance with penalty data
+            $_attendance->update([
+                'delay_minutes' => $penaltyData['delay_minutes'],
+                'delay_penalty' => $penaltyData['penalty'],
+                'attendance_status' => $penaltyData['status'],
+                'daily_salary' => $penaltyData['daily_salary'],
+            ]);
+
             $_return = [
                 'check_in' => date('H:i:s', strtotime($_attendance->check_in)),
                 'check_in_image' => ($_attendance->check_in_image && $_attendance->check_in_image != "-") ? asset('/uploads/attendance/' . $_attendance->check_in_image) : "",
@@ -309,22 +368,7 @@ class AttendanceServices
                 if ($check_out) {
                     return Helper::errorResponseAPI(message: "Already Check Out for Today");
                 }
-                $shift_end = Carbon::createFromFormat('H:i', ($_shift->end));
-                $check_out = $_attendance->check_out;
-                if ($check_out) {
-                    return Helper::errorResponseAPI(message: "Already Check Out for Today");
-                }
-                if (!$is_early_check_out) {
-                    $temp_shift_before_end = $shift_end->subMinutes($before_end)->format('H:i:s');
-                    if (strtotime($current_time) < strtotime($temp_shift_before_end)) {
-                        return Helper::errorResponseAPI(message: "Cannot Check Out at moment. Please Check Out after " . date('H:i',strtotime($temp_shift_before_end)));
-                    }
-                }
-                $shift_end = Carbon::createFromFormat('H:i', ($_shift->end));
-                $temp_shift_after_end = $shift_end->addMinutes($after_end);
-                if (strtotime($current_time) > strtotime($temp_shift_after_end)) {
-                    return Helper::errorResponseAPI(message: "Cannot Check Out at moment. Check Out Must Be done  " . date('H:i',strtotime($temp_shift_after_end)) . " Please Contact Admin");
-                }
+                // Blocking logic removed - allow check-out at any time
 
                 $startShiftTime = $date . " " . $_shift->start . ":00";
                 $endShiftTime = $date . " " . $_shift->end . ":00";
@@ -411,12 +455,47 @@ class AttendanceServices
                 if($_attendance->check_in){
                     throw new SMException("Sorry ! employee cannot check in twice a day");
                 }
-                return $_attendance->update([
+                $_attendance->update([
                     'check_in' => $dateTime,
                     'check_in_image' => '',
                 ]);
+
+                // Calculate delay and penalty after check-in (admin dashboard)
+                $checkInTime = Carbon::createFromFormat('Y-m-d H:i:s', $dateTime);
+                $shiftStartTime = Carbon::createFromFormat('H:i', $_shift->start);
+
+                // Set shift date to same day as check-in
+                $shiftStartTime->setDate(
+                    $checkInTime->year,
+                    $checkInTime->month,
+                    $checkInTime->day
+                );
+
+                // Add grace period (after_start in minutes)
+                $graceMinutes = $_shift->after_start ?? 0;
+                $shiftStartTimeWithGrace = $shiftStartTime->copy()->addMinutes($graceMinutes);
+
+                $shiftWorkingHours = $_shift->working_hours ?? 8;
+
+                $penaltyData = $this->calculateDelayAndPenalty(
+                    $checkInTime,
+                    $shiftStartTimeWithGrace,
+                    $_user->monthly_salary,
+                    $shiftWorkingHours
+                );
+
+                // Update attendance with penalty data
+                $_attendance->update([
+                    'delay_minutes' => $penaltyData['delay_minutes'],
+                    'delay_penalty' => $penaltyData['penalty'],
+                    'attendance_status' => $penaltyData['status'],
+                    'daily_salary' => $penaltyData['daily_salary'],
+                ]);
+
+                return $_attendance;
             }
-            return $this->attendanceRepository->save([
+
+            $_attendance = $this->attendanceRepository->save([
                 'user_id' => $_user->id,
                 'date' => $date,
                 'check_in' => $dateTime,
@@ -424,6 +503,40 @@ class AttendanceServices
                 'attendance_type' => Attendance::Admin,
                 'shift_id' => $_shift->id,
             ]);
+
+            // Calculate delay and penalty after check-in (admin dashboard)
+            $checkInTime = Carbon::createFromFormat('Y-m-d H:i:s', $dateTime);
+            $shiftStartTime = Carbon::createFromFormat('H:i', $_shift->start);
+
+            // Set shift date to same day as check-in
+            $shiftStartTime->setDate(
+                $checkInTime->year,
+                $checkInTime->month,
+                $checkInTime->day
+            );
+
+            // Add grace period (after_start in minutes)
+            $graceMinutes = $_shift->after_start ?? 0;
+            $shiftStartTimeWithGrace = $shiftStartTime->copy()->addMinutes($graceMinutes);
+
+            $shiftWorkingHours = $_shift->working_hours ?? 8;
+
+            $penaltyData = $this->calculateDelayAndPenalty(
+                $checkInTime,
+                $shiftStartTimeWithGrace,
+                $_user->monthly_salary,
+                $shiftWorkingHours
+            );
+
+            // Update attendance with penalty data
+            $_attendance->update([
+                'delay_minutes' => $penaltyData['delay_minutes'],
+                'delay_penalty' => $penaltyData['penalty'],
+                'attendance_status' => $penaltyData['status'],
+                'daily_salary' => $penaltyData['daily_salary'],
+            ]);
+
+            return $_attendance;
         }
         if ($_attendance) {
             if ($attendanceType == "lunchIn") {
@@ -538,6 +651,24 @@ class AttendanceServices
             $totalWorkedInMinutes = $checkIn->diffInMinutes($checkOut);
             $totalOverTimeDuration = ($totalWorkedInMinutes - $totalWorkingMinute);
         }
+
+        // Calculate delay and penalty (admin edit)
+        $shiftStartTime = Carbon::createFromFormat('H:i', $_shift->start);
+        $shiftStartTime->setDate($checkIn->year, $checkIn->month, $checkIn->day);
+
+        // Add grace period (after_start in minutes)
+        $graceMinutes = $_shift->after_start ?? 0;
+        $shiftStartTimeWithGrace = $shiftStartTime->copy()->addMinutes($graceMinutes);
+
+        $shiftWorkingHours = $_shift->working_hours ?? 8;
+
+        $penaltyData = $this->calculateDelayAndPenalty(
+            $checkIn,
+            $shiftStartTimeWithGrace,
+            $_user->monthly_salary,
+            $shiftWorkingHours
+        );
+
         $_attendance->update([
             'check_in' => $checkIn->format("Y-m-d H:i:s"),
             'check_out' => ($checkOut) ? $checkOut->format("Y-m-d H:i:s") : null,
@@ -546,6 +677,10 @@ class AttendanceServices
             'total_working_duration' => $totalWorkedInMinutes,
             'total_lunch_duration' => $totalLunchOutInMinute,
             'total_over_time_duration' => $totalOverTimeDuration,
+            'delay_minutes' => $penaltyData['delay_minutes'],
+            'delay_penalty' => $penaltyData['penalty'],
+            'attendance_status' => $penaltyData['status'],
+            'daily_salary' => $penaltyData['daily_salary'],
         ]);
 
     }
@@ -595,6 +730,24 @@ class AttendanceServices
             $totalWorkedInMinutes = $checkIn->diffInMinutes($checkOut);
             $totalOverTimeDuration = ($totalWorkedInMinutes - $totalWorkingMinute);
         }
+
+        // Calculate delay and penalty (admin manual entry)
+        $shiftStartTime = Carbon::createFromFormat('H:i', $_shift->start);
+        $shiftStartTime->setDate($checkIn->year, $checkIn->month, $checkIn->day);
+
+        // Add grace period (after_start in minutes)
+        $graceMinutes = $_shift->after_start ?? 0;
+        $shiftStartTimeWithGrace = $shiftStartTime->copy()->addMinutes($graceMinutes);
+
+        $shiftWorkingHours = $_shift->working_hours ?? 8;
+
+        $penaltyData = $this->calculateDelayAndPenalty(
+            $checkIn,
+            $shiftStartTimeWithGrace,
+            $_user->monthly_salary,
+            $shiftWorkingHours
+        );
+
         $this->attendanceRepository->save([
             'user_id' => $user_id,
             'date' => $date,
@@ -606,6 +759,10 @@ class AttendanceServices
             'total_lunch_duration' => $totalLunchOutInMinute,
             'total_over_time_duration' => $totalOverTimeDuration,
             'attendance_type' => Attendance::Admin,
+            'delay_minutes' => $penaltyData['delay_minutes'],
+            'delay_penalty' => $penaltyData['penalty'],
+            'attendance_status' => $penaltyData['status'],
+            'daily_salary' => $penaltyData['daily_salary'],
         ]);
     }
 
@@ -793,5 +950,65 @@ class AttendanceServices
         }
         return $attendanceDetail;
 
+    }
+
+    /**
+     * Calculate delay in minutes and penalty amount based on monthly salary
+     *
+     * @param Carbon $checkInTime The actual check-in time
+     * @param Carbon $shiftStartTime The expected shift start time
+     * @param float|null $monthlySalary The employee's monthly salary
+     * @param int $shiftWorkingHours Number of working hours per day (from shift)
+     * @return array ['delay_minutes' => int, 'penalty' => float, 'status' => string, 'daily_salary' => float]
+     */
+    private function calculateDelayAndPenalty($checkInTime, $shiftStartTime, $monthlySalary, $shiftWorkingHours = 8)
+    {
+        $delayMinutes = 0;
+        $penalty = 0;
+        $status = 'on_time';
+        $dailySalary = 0;
+
+        // Si pas de salaire mensuel défini, pas de calcul de pénalité
+        if (!$monthlySalary || $monthlySalary <= 0) {
+            // Calculer quand même le retard en minutes
+            if ($checkInTime->greaterThan($shiftStartTime)) {
+                $delayMinutes = $checkInTime->diffInMinutes($shiftStartTime);
+                $status = 'late';
+            }
+            return [
+                'delay_minutes' => $delayMinutes,
+                'penalty' => 0,
+                'status' => $status,
+                'daily_salary' => 0
+            ];
+        }
+
+        // Calcul du salaire journalier (basé sur 30 jours)
+        $dailySalary = $monthlySalary / 30;
+
+        // Calcul du salaire horaire
+        $hourlySalary = $dailySalary / $shiftWorkingHours;
+
+        // Calcul du salaire par minute
+        $perMinuteSalary = $hourlySalary / 60;
+
+        // Vérifier si en retard
+        if ($checkInTime->greaterThan($shiftStartTime)) {
+            $delayMinutes = $checkInTime->diffInMinutes($shiftStartTime);
+            $status = 'late';
+
+            // Calculer la pénalité basée sur les minutes de retard
+            $penalty = $delayMinutes * $perMinuteSalary;
+
+            // Arrondir la pénalité à 2 décimales
+            $penalty = round($penalty, 2);
+        }
+
+        return [
+            'delay_minutes' => $delayMinutes,
+            'penalty' => $penalty,
+            'status' => $status,
+            'daily_salary' => round($dailySalary - $penalty, 2) // Salaire du jour après déduction
+        ];
     }
 }

@@ -61,6 +61,21 @@
         <input type="number" id="after_end" class="form-control numeric" name="after_end" value="{{ (($_shift ?? '')? $_shift->after_end :  old('after_end')) }}" placeholder="Enter Can check out after (in minute)" >
         <span class="text-danger">{{ $errors->first('after_end') }}</span>
     </div>
+
+    <div class="col-lg-12 mb-3">
+        @php $includes_saturday = (($_shift ?? '')? $_shift->includes_saturday : '') @endphp
+        <span class="form-check form-switch">
+            <input id="includes_saturday" type="checkbox" name="includes_saturday" value="1" class="form-check-input change-status-toggle" @if($includes_saturday) checked @endif>
+            <label for="includes_saturday" class="form-label"> Inclure Samedi (Lundi-Samedi)</label>
+        </span>
+    </div>
+    <div class="col-lg-6 mb-3" id="saturday_end_div" @if(!$includes_saturday) style="display: none" @endif>
+        <label for="saturday_end_time" class="form-label"> Heure de fin Samedi</label>
+        <input type="time" id="saturday_end_time" class="form-control" name="saturday_end_time" value="{{ (($_shift ?? '')? $_shift->saturday_end_time :  old('saturday_end_time')) }}" placeholder="Ex: 12:00">
+        <span class="text-danger">{{ $errors->first('saturday_end_time') }}</span>
+        <small class="text-muted">Heure de sortie pour le samedi (généralement 12:00)</small>
+    </div>
+
     <div class="text-center">
         <button type="submit" class="btn btn-primary"><i class="link-icon" data-feather="plus"></i> {{$btn}}</button>
     </div>

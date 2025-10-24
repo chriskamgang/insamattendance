@@ -34,6 +34,7 @@ class User extends Authenticatable
         'face_id',
         'department_id',
         'shift_id',
+        'monthly_salary',
         'two_factor_code',
         'two_factor_expires_at',
         'otp_verify_status',

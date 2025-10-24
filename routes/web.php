@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\HolidayController;
 use App\Http\Controllers\Admin\LeaveController;
 use App\Http\Controllers\Admin\LeaveTypesController;
 use App\Http\Controllers\Admin\NoticeController;
+use App\Http\Controllers\Admin\PayrollController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ShiftController;
 use App\Http\Controllers\Admin\UserController;
@@ -101,5 +102,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['web','aut
 
     Route::get('/app-setting', [SettingController::class, 'appSetting'])->name('setting.appSetting');
     Route::post('/app-setting-save', [SettingController::class, 'appSettingSave'])->name('setting.appSettingSave');
+
+    Route::get('/payroll', [PayrollController::class, 'index'])->name('payroll.index');
+    Route::post('/payroll/justify', [PayrollController::class, 'justify'])->name('payroll.justify');
+    Route::post('/payroll/apply-deduction', [PayrollController::class, 'applyDeduction'])->name('payroll.apply-deduction');
 
 });

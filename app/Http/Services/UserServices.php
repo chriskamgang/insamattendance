@@ -165,6 +165,7 @@ class UserServices
             'address' => $request->address,
             'shift_id' => $request->shift_id,
             'department_id' => $request->department_id,
+            'monthly_salary' => $request->monthly_salary ?? null,
             'user_type' => "employee",
         ]);
     }
@@ -307,6 +308,8 @@ class UserServices
                 'mobile' => $request->mobile,
                 'address' => $request->address,
                 'shift_id' => $request->shift_id,
+                'department_id' => $request->department_id ?? $_user->department_id,
+                'monthly_salary' => $request->monthly_salary ?? $_user->monthly_salary,
             ]);
 
         }
