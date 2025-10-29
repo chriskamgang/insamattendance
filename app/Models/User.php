@@ -39,6 +39,14 @@ class User extends Authenticatable
         'two_factor_expires_at',
         'otp_verify_status',
         'unique_code',
+        // Champs vacataires
+        'employee_type',
+        'hourly_rate',
+        'contract_start_date',
+        'contract_end_date',
+        'specialization',
+        'contract_status',
+        'max_hours_per_month',
     ];
 
     /**
@@ -63,6 +71,36 @@ class User extends Authenticatable
     public function countFaceIds()
     {
         return FaceIds::where("user_id" , $this->id)->count();
+    }
+
+    // Relations pour les vacataires
+    public function vacataireContracts()
+    {
+        return $this->hasMany(VacataireContract::class, 'user_id');
+    }
+
+    public function activeContract()
+    {
+        return $this->hasOne(VacataireContract::class, 'user_id')
+            ->where('status', 'active')
+            ->latest();
+    }
+
+    public function monthlyPayments()
+    {
+        return $this->hasMany(VacataireMonthlyPayment::class, 'user_id');
+    }
+
+    // Vérifier si c'est un vacataire
+    public function isVacataire()
+    {
+        return $this->employee_type === 'vacataire';
+    }
+
+    // Vérifier si c'est un permanent ou semi-permanent
+    public function isPermanent()
+    {
+        return in_array($this->employee_type, ['permanent', 'semi_permanent']);
     }
 
 }

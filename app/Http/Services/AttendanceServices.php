@@ -222,13 +222,25 @@ class AttendanceServices
                     $lunchOut = Carbon::createFromFormat('Y-m-d H:i:s', ($_attendance->lunch_out ?? Helper::smStartOfDay()));
                     $totalLunchOutInMinute = $lunchOut->diffInMinutes($lunchIn);
 
-                    $_attendance->update([
+                    // Préparer les données de mise à jour
+                    $updateData = [
                         'check_out' => $dateTime,
                         'check_out_image' => $attendanceImage,
                         'total_working_duration' => $totalWorkedInMinutes,
                         'total_lunch_duration' => $totalLunchOutInMinute,
                         'total_over_time_duration' => ($totalWorkedInMinutes - $totalWorkingMinute),
-                    ]);
+                        'attendance_status' => 'on_time', // Marquer comme complet
+                    ];
+
+                    // Calcul du salaire pour les vacataires
+                    if ($_user->employee_type === 'vacataire') {
+                        $hoursWorked = ($totalWorkedInMinutes - $totalLunchOutInMinute) / 60;
+                        $dailySalary = $hoursWorked * $_user->hourly_rate;
+                        $updateData['hourly_rate'] = $_user->hourly_rate;
+                        $updateData['daily_salary'] = round($dailySalary, 2);
+                    }
+
+                    $_attendance->update($updateData);
                     $_attendanceNew = Attendance::find($_attendance->id);
                     $_return = [
                         'check_in' => date('H:i:s', strtotime($_attendanceNew->check_in)),
@@ -271,6 +283,7 @@ class AttendanceServices
                 'check_in_image' => $attendanceImage,
                 'attendance_type' => Attendance::User,
                 'shift_id' => $_shift->id,
+                'attendance_status' => 'incomplete', // En attente du check-out
             ]);
 
             // Calculate delay and penalty after check-in
@@ -384,13 +397,26 @@ class AttendanceServices
                 $lunchIn = Carbon::createFromFormat('Y-m-d H:i:s', ($_attendance->lunch_in ?? Helper::smStartOfDay()));
                 $lunchOut = Carbon::createFromFormat('Y-m-d H:i:s', ($_attendance->lunch_out ?? Helper::smStartOfDay()));
                 $totalLunchOutInMinute = $lunchOut->diffInMinutes($lunchIn);
-                $_attendance->update([
+
+                // Préparer les données de mise à jour
+                $updateData = [
                     'check_out' => $dateTime,
                     'check_out_image' => $attendanceImage,
                     'total_working_duration' => $totalWorkedInMinutes,
                     'total_lunch_duration' => $totalLunchOutInMinute,
                     'total_over_time_duration' => ($totalWorkedInMinutes - $totalWorkingMinute),
-                ]);
+                    'attendance_status' => 'on_time', // Marquer comme complet
+                ];
+
+                // Calcul du salaire pour les vacataires
+                if ($_user->employee_type === 'vacataire') {
+                    $hoursWorked = ($totalWorkedInMinutes - $totalLunchOutInMinute) / 60;
+                    $dailySalary = $hoursWorked * $_user->hourly_rate;
+                    $updateData['hourly_rate'] = $_user->hourly_rate;
+                    $updateData['daily_salary'] = round($dailySalary, 2);
+                }
+
+                $_attendance->update($updateData);
                 $_attendanceNew = Attendance::find($_attendance->id);
                 $_return = [
                     'check_in' => date('H:i:s', strtotime($_attendanceNew->check_in)),
@@ -502,6 +528,7 @@ class AttendanceServices
                 'check_in_image' => "",
                 'attendance_type' => Attendance::Admin,
                 'shift_id' => $_shift->id,
+                'attendance_status' => 'incomplete', // En attente du check-out
             ]);
 
             // Calculate delay and penalty after check-in (admin dashboard)
@@ -580,13 +607,25 @@ class AttendanceServices
                 $lunchOut = Carbon::createFromFormat('Y-m-d H:i:s', ($_attendance->lunch_out ?? $dateTime));
                 $totalLunchOutInMinute = $lunchOut->diffInMinutes($lunchIn);
 
-                return $_attendance->update([
+                // Préparer les données de mise à jour
+                $updateData = [
                     'check_out' => $dateTime,
                     'check_out_image' => "-",
                     'total_working_duration' => $totalWorkedInMinutes,
                     'total_lunch_duration' => $totalLunchOutInMinute,
                     'total_over_time_duration' => ($totalWorkedInMinutes - $totalWorkingMinute),
-                ]);
+                    'attendance_status' => 'on_time', // Marquer comme complet
+                ];
+
+                // Calcul du salaire pour les vacataires
+                if ($_user->employee_type === 'vacataire') {
+                    $hoursWorked = ($totalWorkedInMinutes - $totalLunchOutInMinute) / 60;
+                    $dailySalary = $hoursWorked * $_user->hourly_rate;
+                    $updateData['hourly_rate'] = $_user->hourly_rate;
+                    $updateData['daily_salary'] = round($dailySalary, 2);
+                }
+
+                return $_attendance->update($updateData);
             }
         }
         throw new SMException("Employee not checked in yet");
@@ -662,14 +701,7 @@ class AttendanceServices
 
         $shiftWorkingHours = $_shift->working_hours ?? 8;
 
-        $penaltyData = $this->calculateDelayAndPenalty(
-            $checkIn,
-            $shiftStartTimeWithGrace,
-            $_user->monthly_salary,
-            $shiftWorkingHours
-        );
-
-        $_attendance->update([
+        $updateData = [
             'check_in' => $checkIn->format("Y-m-d H:i:s"),
             'check_out' => ($checkOut) ? $checkOut->format("Y-m-d H:i:s") : null,
             'lunch_in' => ($lunchIn) ? $lunchIn->format("Y-m-d H:i:s") : null,
@@ -677,11 +709,31 @@ class AttendanceServices
             'total_working_duration' => $totalWorkedInMinutes,
             'total_lunch_duration' => $totalLunchOutInMinute,
             'total_over_time_duration' => $totalOverTimeDuration,
-            'delay_minutes' => $penaltyData['delay_minutes'],
-            'delay_penalty' => $penaltyData['penalty'],
-            'attendance_status' => $penaltyData['status'],
-            'daily_salary' => $penaltyData['daily_salary'],
-        ]);
+        ];
+
+        // Si c'est un vacataire, calculer le salaire horaire
+        if ($_user->employee_type === 'vacataire' && $checkOut) {
+            $hoursWorked = ($totalWorkedInMinutes - $totalLunchOutInMinute) / 60;
+            $dailySalary = $hoursWorked * $_user->hourly_rate;
+
+            $updateData['hourly_rate'] = $_user->hourly_rate;
+            $updateData['daily_salary'] = round($dailySalary, 2);
+        } else {
+            // Permanent/Semi-permanent : calcul avec pénalités
+            $penaltyData = $this->calculateDelayAndPenalty(
+                $checkIn,
+                $shiftStartTimeWithGrace,
+                $_user->monthly_salary,
+                $shiftWorkingHours
+            );
+
+            $updateData['delay_minutes'] = $penaltyData['delay_minutes'];
+            $updateData['delay_penalty'] = $penaltyData['penalty'];
+            $updateData['attendance_status'] = $penaltyData['status'];
+            $updateData['daily_salary'] = $penaltyData['daily_salary'];
+        }
+
+        $_attendance->update($updateData);
 
     }
 
@@ -741,14 +793,7 @@ class AttendanceServices
 
         $shiftWorkingHours = $_shift->working_hours ?? 8;
 
-        $penaltyData = $this->calculateDelayAndPenalty(
-            $checkIn,
-            $shiftStartTimeWithGrace,
-            $_user->monthly_salary,
-            $shiftWorkingHours
-        );
-
-        $this->attendanceRepository->save([
+        $attendanceData = [
             'user_id' => $user_id,
             'date' => $date,
             'check_in' => $checkIn->format("Y-m-d H:i:s"),
@@ -759,11 +804,31 @@ class AttendanceServices
             'total_lunch_duration' => $totalLunchOutInMinute,
             'total_over_time_duration' => $totalOverTimeDuration,
             'attendance_type' => Attendance::Admin,
-            'delay_minutes' => $penaltyData['delay_minutes'],
-            'delay_penalty' => $penaltyData['penalty'],
-            'attendance_status' => $penaltyData['status'],
-            'daily_salary' => $penaltyData['daily_salary'],
-        ]);
+        ];
+
+        // Si c'est un vacataire, calculer le salaire horaire
+        if ($_user->employee_type === 'vacataire' && $request_check_out) {
+            $hoursWorked = ($totalWorkedInMinutes - $totalLunchOutInMinute) / 60;
+            $dailySalary = $hoursWorked * $_user->hourly_rate;
+
+            $attendanceData['hourly_rate'] = $_user->hourly_rate;
+            $attendanceData['daily_salary'] = round($dailySalary, 2);
+        } else {
+            // Permanent/Semi-permanent : calcul avec pénalités
+            $penaltyData = $this->calculateDelayAndPenalty(
+                $checkIn,
+                $shiftStartTimeWithGrace,
+                $_user->monthly_salary,
+                $shiftWorkingHours
+            );
+
+            $attendanceData['delay_minutes'] = $penaltyData['delay_minutes'];
+            $attendanceData['delay_penalty'] = $penaltyData['penalty'];
+            $attendanceData['attendance_status'] = $penaltyData['status'];
+            $attendanceData['daily_salary'] = $penaltyData['daily_salary'];
+        }
+
+        $this->attendanceRepository->save($attendanceData);
     }
 
     /**

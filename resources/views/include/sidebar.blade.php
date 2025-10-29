@@ -70,6 +70,26 @@
                         <span class="link-title">Rapport Payroll</span>
                     </a>
                 </li>
+                <li class="nav-item @if($Route[1] === 'vacataire') active @endif">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#vacataireMenu" role="button" aria-expanded="@if($Route[1] === 'vacataire') true @else false @endif" aria-controls="vacataireMenu">
+                        <i class="link-icon" data-feather="briefcase"></i>
+                        <span class="link-title">Vacataires</span>
+                        <i class="link-arrow" data-feather="chevron-down"></i>
+                    </a>
+                    <div class="collapse @if($Route[1] === 'vacataire') show @endif" id="vacataireMenu">
+                        <ul class="nav sub-menu">
+                            <li class="nav-item">
+                                <a href="{{route('admin.vacataire.index')}}" class="nav-link @if($currentRoute === 'admin.vacataire.index') active @endif">Liste des Vacataires</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('admin.vacataire.payments.index')}}" class="nav-link @if($currentRoute === 'admin.vacataire.payments.index') active @endif">Gestion Paiements</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('admin.vacataire.reports')}}" class="nav-link @if($currentRoute === 'admin.vacataire.reports') active @endif">Rapports</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 <li class="nav-item @if($Route[1] === 'leaveType') active @endif">
                     <a href="{{route('admin.leaveType.index')}}" class="nav-link">
                         <i class="link-icon" data-feather="activity"></i>

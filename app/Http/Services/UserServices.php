@@ -157,7 +157,7 @@ class UserServices
     }
     public function saveUserWeb($request)
     {
-        return $this->userRepository->save([
+        $data = [
             'name' => $request->name,
             'dob' => Helper::smDate($request->dob, EDateFormat::Ymd),
             'email' => $request->email,
@@ -165,9 +165,48 @@ class UserServices
             'address' => $request->address,
             'shift_id' => $request->shift_id,
             'department_id' => $request->department_id,
-            'monthly_salary' => $request->monthly_salary ?? null,
             'user_type' => "employee",
-        ]);
+            'employee_type' => $request->employee_type ?? 'permanent',
+        ];
+
+        // Si c'est un vacataire, ajouter les champs spécifiques
+        if ($request->employee_type === 'vacataire') {
+            $data['hourly_rate'] = $request->hourly_rate;
+            $data['contract_start_date'] = $request->contract_start_date ? Helper::smDate($request->contract_start_date, EDateFormat::Ymd) : null;
+            $data['contract_end_date'] = $request->contract_end_date ? Helper::smDate($request->contract_end_date, EDateFormat::Ymd) : null;
+            $data['specialization'] = $request->specialization;
+            $data['max_hours_per_month'] = $request->max_hours_per_month;
+            $data['contract_status'] = 'active';
+            $data['monthly_salary'] = null; // Les vacataires n'ont pas de salaire mensuel fixe
+        } else {
+            // Permanent ou Semi-permanent
+            $data['monthly_salary'] = $request->monthly_salary ?? null;
+            $data['hourly_rate'] = null;
+            $data['contract_start_date'] = null;
+            $data['contract_end_date'] = null;
+            $data['specialization'] = null;
+            $data['max_hours_per_month'] = null;
+        }
+
+        $user = $this->userRepository->save($data);
+
+        // Si c'est un vacataire, créer également un enregistrement dans vacataire_contracts
+        if ($request->employee_type === 'vacataire' && $user) {
+            \App\Models\VacataireContract::create([
+                'user_id' => $user->id,
+                'contract_number' => 'CNT-' . date('Y') . '-' . str_pad($user->id, 5, '0', STR_PAD_LEFT),
+                'start_date' => $request->contract_start_date,
+                'end_date' => $request->contract_end_date,
+                'hourly_rate' => $request->hourly_rate,
+                'max_hours_per_month' => $request->max_hours_per_month,
+                'specialization' => $request->specialization,
+                'contract_type' => 'initial',
+                'status' => 'active',
+                'created_by' => auth()->id(),
+            ]);
+        }
+
+        return $user;
     }
     public function saveAdminWeb($request)
     {
@@ -301,7 +340,7 @@ class UserServices
     {
         $_user = $this->userRepository->find($user_id);
         if ($_user) {
-            return $this->userRepository->update($_user, [
+            $data = [
                 'name' => $request->name,
                 'dob' => Helper::smDate($request->dob, EDateFormat::Ymd),
                 'email' => $request->email,
@@ -309,9 +348,29 @@ class UserServices
                 'address' => $request->address,
                 'shift_id' => $request->shift_id,
                 'department_id' => $request->department_id ?? $_user->department_id,
-                'monthly_salary' => $request->monthly_salary ?? $_user->monthly_salary,
-            ]);
+                'employee_type' => $request->employee_type ?? $_user->employee_type,
+            ];
 
+            // Si c'est un vacataire, mettre à jour les champs spécifiques
+            if ($request->employee_type === 'vacataire') {
+                $data['hourly_rate'] = $request->hourly_rate;
+                $data['contract_start_date'] = $request->contract_start_date ? Helper::smDate($request->contract_start_date, EDateFormat::Ymd) : null;
+                $data['contract_end_date'] = $request->contract_end_date ? Helper::smDate($request->contract_end_date, EDateFormat::Ymd) : null;
+                $data['specialization'] = $request->specialization;
+                $data['max_hours_per_month'] = $request->max_hours_per_month;
+                $data['contract_status'] = $request->contract_status ?? $_user->contract_status ?? 'active';
+                $data['monthly_salary'] = null;
+            } else {
+                // Permanent ou Semi-permanent
+                $data['monthly_salary'] = $request->monthly_salary ?? $_user->monthly_salary;
+                $data['hourly_rate'] = null;
+                $data['contract_start_date'] = null;
+                $data['contract_end_date'] = null;
+                $data['specialization'] = null;
+                $data['max_hours_per_month'] = null;
+            }
+
+            return $this->userRepository->update($_user, $data);
         }
         throw new SMException($this->notFoundMessage);
     }

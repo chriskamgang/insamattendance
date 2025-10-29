@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\PayrollController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ShiftController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\VacataireController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -106,5 +107,31 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['web','aut
     Route::get('/payroll', [PayrollController::class, 'index'])->name('payroll.index');
     Route::post('/payroll/justify', [PayrollController::class, 'justify'])->name('payroll.justify');
     Route::post('/payroll/apply-deduction', [PayrollController::class, 'applyDeduction'])->name('payroll.apply-deduction');
+
+    // Routes Vacataires
+    Route::prefix('vacataires')->name('vacataire.')->group(function () {
+        // Liste des vacataires
+        Route::get('/', [VacataireController::class, 'index'])->name('index');
+
+        // Rapports (AVANT /{id} pour éviter conflit)
+        Route::get('/reports', [VacataireController::class, 'reports'])->name('reports');
+
+        // Gestion des paiements (AVANT /{id} pour éviter conflit)
+        Route::get('/payments/list', [VacataireController::class, 'paymentsIndex'])->name('payments.index');
+        Route::post('/payments/generate', [VacataireController::class, 'generatePayments'])->name('payments.generate');
+        Route::get('/payments/export', [VacataireController::class, 'exportPayments'])->name('payments.export');
+        Route::post('/payments/{id}/validate', [VacataireController::class, 'validatePayment'])->name('payments.validate');
+        Route::post('/payments/{id}/mark-paid', [VacataireController::class, 'markAsPaid'])->name('payments.markPaid');
+        Route::post('/payments/{id}/cancel', [VacataireController::class, 'cancelPayment'])->name('payments.cancel');
+        Route::post('/payments/{id}/adjustments', [VacataireController::class, 'updatePaymentAdjustments'])->name('payments.adjustments');
+        Route::get('/payments/{id}/payslip', [VacataireController::class, 'downloadPayslip'])->name('payments.payslip');
+
+        // Détails d'un vacataire (APRÈS les routes spécifiques)
+        Route::get('/{id}', [VacataireController::class, 'show'])->name('show');
+
+        // Gestion des contrats
+        Route::post('/{id}/renew', [VacataireController::class, 'renewContract'])->name('renew');
+        Route::post('/{id}/terminate', [VacataireController::class, 'terminateContract'])->name('terminate');
+    });
 
 });

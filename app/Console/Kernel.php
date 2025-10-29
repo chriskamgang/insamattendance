@@ -12,7 +12,16 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Fermer automatiquement les présences sans check-out à minuit
+        $schedule->command('attendance:auto-close')
+            ->dailyAt('00:00')
+            ->withoutOverlapping()
+            ->onSuccess(function () {
+                \Log::info('Auto-close attendances executed successfully');
+            })
+            ->onFailure(function () {
+                \Log::error('Auto-close attendances failed');
+            });
     }
 
     /**

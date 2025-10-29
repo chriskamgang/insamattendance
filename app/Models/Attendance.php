@@ -38,6 +38,13 @@ class Attendance extends Model
 
         'shift_id',
         'updated_by',
+
+        // Champs vacataires
+        'hourly_rate',
+        'daily_salary',
+        'is_validated',
+        'validated_by',
+        'validated_at',
     ];
 
     public const User = 'user';

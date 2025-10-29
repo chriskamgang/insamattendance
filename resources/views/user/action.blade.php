@@ -29,6 +29,18 @@
                value="{{ (($_user ?? '')? $_user->address :  old('address')) }}" placeholder="Enter Address" required>
         <span class="text-danger">{{ $errors->first('address') }}</span>
     </div>
+    {{-- Type d'employé --}}
+    <div class="col-lg-6 mb-3">
+        <label for="employee_type" class="form-label"> Type d'Employé</label>
+        <select id="employee_type" name="employee_type" class="form-select" required>
+            @php $employee_type = (($_user ?? '')? $_user->employee_type : old('employee_type', 'permanent')) @endphp
+            <option value="permanent" @if($employee_type == 'permanent') selected @endif>Permanent</option>
+            <option value="semi_permanent" @if($employee_type == 'semi_permanent') selected @endif>Semi-Permanent</option>
+            <option value="vacataire" @if($employee_type == 'vacataire') selected @endif>Vacataire</option>
+        </select>
+        <span class="text-danger">{{ $errors->first('employee_type') }}</span>
+    </div>
+
     @if($_user ?? "" )
         @if($_user->user_type == 'employee')
             <div class="col-lg-6 mb-3">
@@ -53,11 +65,47 @@
                 </select>
                 <span class="text-danger">{{ $errors->first('department_id') }}</span>
             </div>
-            <div class="col-lg-6 mb-3">
+
+            {{-- Champs pour Permanent/Semi-Permanent --}}
+            <div class="col-lg-6 mb-3 permanent-fields">
                 <label for="monthly_salary" class="form-label"> Salaire Mensuel (FCFA)</label>
                 <input type="number" step="0.01" id="monthly_salary" class="form-control" name="monthly_salary"
                        value="{{ (($_user ?? '')? $_user->monthly_salary :  old('monthly_salary')) }}" placeholder="Entrer le salaire mensuel" min="0">
                 <span class="text-danger">{{ $errors->first('monthly_salary') }}</span>
+            </div>
+
+            {{-- Champs pour Vacataires --}}
+            <div class="col-lg-6 mb-3 vacataire-fields" style="display: none;">
+                <label for="hourly_rate" class="form-label"> Taux Horaire (FCFA/heure) <span class="text-danger">*</span></label>
+                <input type="number" step="0.01" id="hourly_rate" class="form-control" name="hourly_rate"
+                       value="{{ (($_user ?? '')? $_user->hourly_rate : old('hourly_rate')) }}" placeholder="Ex: 5000" min="0">
+                <span class="text-danger">{{ $errors->first('hourly_rate') }}</span>
+            </div>
+            <div class="col-lg-6 mb-3 vacataire-fields" style="display: none;">
+                <label for="contract_start_date" class="form-label"> Date Début Contrat <span class="text-danger">*</span></label>
+                <input type="date" id="contract_start_date" class="form-control" name="contract_start_date"
+                       value="{{ (($_user ?? '')? $_user->contract_start_date : old('contract_start_date')) }}">
+                <span class="text-danger">{{ $errors->first('contract_start_date') }}</span>
+            </div>
+            <div class="col-lg-6 mb-3 vacataire-fields" style="display: none;">
+                <label for="contract_end_date" class="form-label"> Date Fin Contrat</label>
+                <input type="date" id="contract_end_date" class="form-control" name="contract_end_date"
+                       value="{{ (($_user ?? '')? $_user->contract_end_date : old('contract_end_date')) }}">
+                <span class="text-danger">{{ $errors->first('contract_end_date') }}</span>
+                <small class="text-muted">Laissez vide pour contrat à durée indéterminée</small>
+            </div>
+            <div class="col-lg-6 mb-3 vacataire-fields" style="display: none;">
+                <label for="specialization" class="form-label"> Spécialité/Matière</label>
+                <input type="text" id="specialization" class="form-control" name="specialization"
+                       value="{{ (($_user ?? '')? $_user->specialization : old('specialization')) }}" placeholder="Ex: Mathématiques, Informatique...">
+                <span class="text-danger">{{ $errors->first('specialization') }}</span>
+            </div>
+            <div class="col-lg-6 mb-3 vacataire-fields" style="display: none;">
+                <label for="max_hours_per_month" class="form-label"> Quota Max Heures/Mois</label>
+                <input type="number" id="max_hours_per_month" class="form-control" name="max_hours_per_month"
+                       value="{{ (($_user ?? '')? $_user->max_hours_per_month : old('max_hours_per_month')) }}" placeholder="Ex: 80" min="0">
+                <span class="text-danger">{{ $errors->first('max_hours_per_month') }}</span>
+                <small class="text-muted">Laissez vide pour aucune limite</small>
             </div>
         @endif
     @else
@@ -81,11 +129,47 @@
             </select>
             <span class="text-danger">{{ $errors->first('department_id') }}</span>
         </div>
-        <div class="col-lg-6 mb-3">
+
+        {{-- Champs pour Permanent/Semi-Permanent --}}
+        <div class="col-lg-6 mb-3 permanent-fields">
             <label for="monthly_salary" class="form-label"> Salaire Mensuel (FCFA)</label>
             <input type="number" step="0.01" id="monthly_salary" class="form-control" name="monthly_salary"
-                   value="{{ (($_user ?? '')? $_user->monthly_salary :  old('monthly_salary')) }}" placeholder="Entrer le salaire mensuel" min="0">
+                   value="{{ old('monthly_salary') }}" placeholder="Entrer le salaire mensuel" min="0">
             <span class="text-danger">{{ $errors->first('monthly_salary') }}</span>
+        </div>
+
+        {{-- Champs pour Vacataires --}}
+        <div class="col-lg-6 mb-3 vacataire-fields" style="display: none;">
+            <label for="hourly_rate" class="form-label"> Taux Horaire (FCFA/heure) <span class="text-danger">*</span></label>
+            <input type="number" step="0.01" id="hourly_rate" class="form-control" name="hourly_rate"
+                   value="{{ old('hourly_rate') }}" placeholder="Ex: 5000" min="0">
+            <span class="text-danger">{{ $errors->first('hourly_rate') }}</span>
+        </div>
+        <div class="col-lg-6 mb-3 vacataire-fields" style="display: none;">
+            <label for="contract_start_date" class="form-label"> Date Début Contrat <span class="text-danger">*</span></label>
+            <input type="date" id="contract_start_date" class="form-control" name="contract_start_date"
+                   value="{{ old('contract_start_date') }}">
+            <span class="text-danger">{{ $errors->first('contract_start_date') }}</span>
+        </div>
+        <div class="col-lg-6 mb-3 vacataire-fields" style="display: none;">
+            <label for="contract_end_date" class="form-label"> Date Fin Contrat</label>
+            <input type="date" id="contract_end_date" class="form-control" name="contract_end_date"
+                   value="{{ old('contract_end_date') }}">
+            <span class="text-danger">{{ $errors->first('contract_end_date') }}</span>
+            <small class="text-muted">Laissez vide pour contrat à durée indéterminée</small>
+        </div>
+        <div class="col-lg-6 mb-3 vacataire-fields" style="display: none;">
+            <label for="specialization" class="form-label"> Spécialité/Matière</label>
+            <input type="text" id="specialization" class="form-control" name="specialization"
+                   value="{{ old('specialization') }}" placeholder="Ex: Mathématiques, Informatique...">
+            <span class="text-danger">{{ $errors->first('specialization') }}</span>
+        </div>
+        <div class="col-lg-6 mb-3 vacataire-fields" style="display: none;">
+            <label for="max_hours_per_month" class="form-label"> Quota Max Heures/Mois</label>
+            <input type="number" id="max_hours_per_month" class="form-control" name="max_hours_per_month"
+                   value="{{ old('max_hours_per_month') }}" placeholder="Ex: 80" min="0">
+            <span class="text-danger">{{ $errors->first('max_hours_per_month') }}</span>
+            <small class="text-muted">Laissez vide pour aucune limite</small>
         </div>
     @endif
     @if( checkUserRole())
@@ -106,3 +190,46 @@
         </div>
     @endif
 </div>
+
+<script>
+    // Toggle des champs selon le type d'employé
+    document.addEventListener('DOMContentLoaded', function() {
+        const employeeTypeSelect = document.getElementById('employee_type');
+        const permanentFields = document.querySelectorAll('.permanent-fields');
+        const vacataireFields = document.querySelectorAll('.vacataire-fields');
+
+        function toggleFields() {
+            const selectedType = employeeTypeSelect.value;
+
+            if (selectedType === 'vacataire') {
+                // Afficher champs vacataires, masquer champs permanents
+                permanentFields.forEach(field => field.style.display = 'none');
+                vacataireFields.forEach(field => field.style.display = 'block');
+
+                // Rendre les champs vacataires requis
+                document.getElementById('hourly_rate').setAttribute('required', 'required');
+                document.getElementById('contract_start_date').setAttribute('required', 'required');
+
+                // Retirer required des champs permanents
+                document.getElementById('monthly_salary').removeAttribute('required');
+            } else {
+                // Afficher champs permanents, masquer champs vacataires
+                permanentFields.forEach(field => field.style.display = 'block');
+                vacataireFields.forEach(field => field.style.display = 'none');
+
+                // Retirer required des champs vacataires
+                document.getElementById('hourly_rate').removeAttribute('required');
+                document.getElementById('contract_start_date').removeAttribute('required');
+
+                // Rendre monthly_salary non requis (optionnel)
+                // document.getElementById('monthly_salary').setAttribute('required', 'required');
+            }
+        }
+
+        // Exécuter au chargement
+        toggleFields();
+
+        // Exécuter au changement
+        employeeTypeSelect.addEventListener('change', toggleFields);
+    });
+</script>

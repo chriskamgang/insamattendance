@@ -31,8 +31,13 @@ class PayrollController extends Controller
         // Calculate working days in the month (Monday-Saturday, excluding holidays)
         $workingDays = $this->calculateWorkingDays($startDate, $endDate);
 
-        // Get all employees (user_type = 'employee')
+        // Get all employees (user_type = 'employee') EXCEPT vacataires
+        // Les vacataires ont leur propre système de paie dans /admin/vacataires/payments
         $employees = User::where('user_type', 'employee')
+            ->where(function($query) {
+                $query->where('employee_type', '!=', 'vacataire')
+                      ->orWhereNull('employee_type');
+            })
             ->with(['getDepartment', 'getShift'])
             ->get();
 
@@ -45,9 +50,22 @@ class PayrollController extends Controller
                 ->whereDate('date', '<=', $endDate)
                 ->get();
 
-            // Calculate totals
-            $daysWorked = $attendances->count();
+            // Calculate totals - count UNIQUE dates (not total records)
+            // Un employé peut avoir plusieurs enregistrements pour la même date (corrections, etc.)
+            $daysWorked = $attendances->pluck('date')->unique()->count();
             $daysNotWorked = max(0, $workingDays - $daysWorked);
+
+            // DEBUG: Log pour Stéphane Foyet
+            if (stripos($employee->name, 'Foyet') !== false) {
+                \Log::info("DEBUG PAYROLL - {$employee->name}", [
+                    'user_id' => $employee->id,
+                    'period' => "$startDate to $endDate",
+                    'total_records' => $attendances->count(),
+                    'unique_dates' => $attendances->pluck('date')->unique()->toArray(),
+                    'days_worked_calculated' => $daysWorked,
+                    'working_days_in_month' => $workingDays,
+                ]);
+            }
             $totalDelayMinutes = $attendances->sum('delay_minutes');
             $totalPenalties = $attendances->sum('delay_penalty');
 

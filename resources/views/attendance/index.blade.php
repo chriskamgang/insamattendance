@@ -71,6 +71,7 @@
                                     <th class="text-center">CHECK OUT</th>
                                     <th class="text-center">Leave</th>
                                     <th class="text-center">Attendance Type</th>
+                                    <th class="text-center">Status</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -137,6 +138,17 @@
                                         </td>
                                         <td class="text-center">{{ ($attendance->is_on_leave)? "Yes" : "" }}</td>
                                         <td class="text-center">{{ ucfirst($attendance->attendance_type) }}</td>
+                                        <td class="text-center">
+                                            @if($attendance->is_auto_closed && $attendance->attendance_status === 'half_day')
+                                                <span class="badge bg-warning text-dark" title="Fermée automatiquement sans check-out">Demi-journée</span>
+                                            @elseif($attendance->attendance_status === 'incomplete')
+                                                <span class="badge bg-info">En cours</span>
+                                            @elseif($attendance->check_out)
+                                                <span class="badge bg-success">Complète</span>
+                                            @else
+                                                <span class="badge bg-secondary">-</span>
+                                            @endif
+                                        </td>
                                         <td class="text-center">
                                             @if(!$attendance->is_on_leave)
                                                 <div class="dropdown text-center">
@@ -221,6 +233,7 @@
                                     <th class="text-center">CHECK OUT</th>
                                     <th class="text-center">Leave</th>
                                     <th class="text-center">Attendance Type</th>
+                                    <th class="text-center">Status</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -287,6 +300,17 @@
                                         </td>
                                         <td class="text-center">{{ ($attendance->is_on_leave)? "Yes" : "" }}</td>
                                         <td class="text-center">{{ ucfirst($attendance->attendance_type) }}</td>
+                                        <td class="text-center">
+                                            @if($attendance->is_auto_closed && $attendance->attendance_status === 'half_day')
+                                                <span class="badge bg-warning text-dark" title="Fermée automatiquement sans check-out">Demi-journée</span>
+                                            @elseif($attendance->attendance_status === 'incomplete')
+                                                <span class="badge bg-info">En cours</span>
+                                            @elseif($attendance->check_out)
+                                                <span class="badge bg-success">Complète</span>
+                                            @else
+                                                <span class="badge bg-secondary">-</span>
+                                            @endif
+                                        </td>
                                         <td class="text-center">
                                             @if(!$attendance->is_on_leave)
                                                 <div class="dropdown text-center">
